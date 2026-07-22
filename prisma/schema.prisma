@@ -1,0 +1,103 @@
+// Prisma schema — all editable site content lives here as tables.
+// After changing this file: `npm run db:migrate` then `npm run db:generate`.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Single-row table for site-wide settings and long-form text.
+model Settings {
+  id          String @id @default("main")
+  name        String
+  role        String
+  tagline     String
+  location    String
+  email       String
+  resumeUrl   String
+  github      String
+  linkedin    String
+  twitter     String
+  careerGoals String @db.Text
+  aboutMe     String @db.Text
+}
+
+/// Home page headline stats.
+model Stat {
+  id    String @id @default(cuid())
+  label String
+  value String
+  order Int    @default(0)
+}
+
+/// Work experience timeline entries.
+model Job {
+  id         String   @id @default(cuid())
+  company    String
+  title      String
+  period     String
+  location   String
+  summary    String   @db.Text
+  highlights String[]
+  order      Int      @default(0)
+}
+
+/// Portfolio projects.
+model Project {
+  id     String   @id @default(cuid())
+  name   String
+  blurb  String   @db.Text
+  tags   String[]
+  link   String?
+  repo   String?
+  accent String   @default("violet") // violet | magenta | cyan | lime
+  order  Int      @default(0)
+}
+
+/// Education & certifications.
+model Credential {
+  id     String @id @default(cuid())
+  title  String
+  issuer String
+  year   String
+  type   String @default("certification") // education | certification
+  order  Int    @default(0)
+}
+
+/// Skill groups (skills stored as a string array).
+model SkillGroup {
+  id       String   @id @default(cuid())
+  category String
+  skills   String[]
+  order    Int      @default(0)
+}
+
+/// Personal hobbies & interests.
+model Hobby {
+  id          String @id @default(cuid())
+  emoji       String
+  title       String
+  description String @db.Text
+  order       Int    @default(0)
+}
+
+/// Quick fun facts.
+model FunFact {
+  id    String @id @default(cuid())
+  text  String @db.Text
+  order Int    @default(0)
+}
+
+/// Contact channels shown on the contact page.
+model ContactMethod {
+  id    String @id @default(cuid())
+  label String
+  value String
+  href  String
+  icon  String @default("mail") // mail | linkedin | github | location
+  order Int    @default(0)
+}

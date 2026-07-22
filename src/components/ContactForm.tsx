@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { site } from "@/lib/data";
 
 /*
   This form opens the visitor's email client with a pre-filled message
@@ -12,7 +11,7 @@ import { site } from "@/lib/data";
   backed by Resend. See /src/app/contact/page.tsx notes.
 */
 
-export default function ContactForm() {
+export default function ContactForm({ email }: { email: string }) {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
 
@@ -28,7 +27,7 @@ export default function ContactForm() {
     const body = encodeURIComponent(
       `${form.message}\n\n— ${form.name}\n${form.email}`
     );
-    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     setSent(true);
   }
 
@@ -92,7 +91,7 @@ export default function ContactForm() {
       {sent && (
         <p className="text-center text-sm text-[var(--color-lime)]">
           Your email app should have opened with the message ready to send. If
-          not, email me directly at {site.email}.
+          not, email me directly at {email}.
         </p>
       )}
     </form>

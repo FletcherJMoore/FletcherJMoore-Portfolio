@@ -3,14 +3,15 @@ import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import {
-  experience,
-  projects,
-  credentials,
-  skillGroups,
-  careerGoals,
-} from "@/lib/data";
+  getExperience,
+  getProjects,
+  getCredentials,
+  getSkillGroups,
+  getSettings,
+} from "@/lib/content";
 
 export const metadata: Metadata = { title: "Professional" };
+export const dynamic = "force-dynamic";
 
 const accentMap: Record<string, string> = {
   violet: "var(--color-violet)",
@@ -29,7 +30,17 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function ProfessionalPage() {
+export default async function ProfessionalPage() {
+  const [experience, projects, credentials, skillGroups, site] =
+    await Promise.all([
+      getExperience(),
+      getProjects(),
+      getCredentials(),
+      getSkillGroups(),
+      getSettings(),
+    ]);
+  const careerGoals = site.careerGoals;
+
   return (
     <>
       <PageHeader

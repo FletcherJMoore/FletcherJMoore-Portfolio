@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import ContactForm from "@/components/ContactForm";
-import { contactMethods } from "@/lib/data";
+import { getContactMethods, getSettings } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Contact" };
+export const dynamic = "force-dynamic";
 
 /*
   UPGRADING THE FORM TO SEND SERVER-SIDE (optional):
@@ -55,7 +56,12 @@ function Icon({ name }: { name: string }) {
   }
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const [contactMethods, site] = await Promise.all([
+    getContactMethods(),
+    getSettings(),
+  ]);
+
   return (
     <>
       <PageHeader
@@ -66,7 +72,7 @@ export default function ContactPage() {
 
       <div className="mx-auto grid max-w-6xl gap-8 px-5 pb-28 md:grid-cols-[1.3fr_1fr]">
         <Reveal>
-          <ContactForm />
+          <ContactForm email={site.email} />
         </Reveal>
 
         <Reveal delay={0.1}>

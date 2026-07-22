@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { site, homeStats } from "@/lib/data";
+
+type HeroProps = {
+  name: string;
+  role: string;
+  tagline: string;
+  stats: { label: string; value: string }[];
+};
 
 const container = {
   hidden: {},
@@ -17,7 +23,7 @@ const item = {
   },
 };
 
-export default function Hero() {
+export default function Hero({ name, role, tagline, stats }: HeroProps) {
   return (
     <section className="relative mx-auto max-w-6xl px-5 pt-20 pb-16 sm:pt-28">
       <motion.div variants={container} initial="hidden" animate="show">
@@ -30,21 +36,21 @@ export default function Hero() {
           variants={item}
           className="mt-6 font-display text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl"
         >
-          Hi, I&apos;m <span className="text-gradient">{site.name}</span>.
+          Hi, I&apos;m <span className="text-gradient">{name}</span>.
         </motion.h1>
 
         <motion.p
           variants={item}
           className="mt-4 font-display text-2xl font-medium text-[var(--color-muted)] sm:text-3xl"
         >
-          {site.role}
+          {role}
         </motion.p>
 
         <motion.p
           variants={item}
           className="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-muted)]"
         >
-          {site.tagline}
+          {tagline}
         </motion.p>
 
         <motion.div variants={item} className="mt-8 flex flex-wrap gap-3">
@@ -67,7 +73,7 @@ export default function Hero() {
           variants={item}
           className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4"
         >
-          {homeStats.map((s) => (
+          {stats.map((s) => (
             <div
               key={s.label}
               className="card px-5 py-6 text-center"

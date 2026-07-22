@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
-import { site } from "@/lib/data";
+import { getSettings } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Resume" };
+export const dynamic = "force-dynamic";
 
-export default function ResumePage() {
+export default async function ResumePage() {
+  const site = await getSettings();
   return (
     <>
       <PageHeader

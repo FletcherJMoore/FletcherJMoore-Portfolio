@@ -2,6 +2,9 @@ import Link from "next/link";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import Reveal from "@/components/Reveal";
+import { getSettings, getStats, getSkillGroups } from "@/lib/content";
+
+export const dynamic = "force-dynamic";
 
 const sections = [
   {
@@ -20,11 +23,23 @@ const sections = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const [site, stats, skillGroups] = await Promise.all([
+    getSettings(),
+    getStats(),
+    getSkillGroups(),
+  ]);
+  const skills = skillGroups.flatMap((g) => g.skills);
+
   return (
     <>
-      <Hero />
-      <Marquee />
+      <Hero
+        name={site.name}
+        role={site.role}
+        tagline={site.tagline}
+        stats={stats}
+      />
+      <Marquee skills={skills} />
 
       <section className="mx-auto max-w-6xl px-5 py-20">
         <Reveal>

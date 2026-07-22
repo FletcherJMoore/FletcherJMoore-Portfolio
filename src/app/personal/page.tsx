@@ -2,11 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
-import { aboutMe, hobbies, funFacts } from "@/lib/data";
+import { getHobbies, getFunFacts, getSettings } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Personal" };
+export const dynamic = "force-dynamic";
 
-export default function PersonalPage() {
+export default async function PersonalPage() {
+  const [hobbies, funFacts, site] = await Promise.all([
+    getHobbies(),
+    getFunFacts(),
+    getSettings(),
+  ]);
+  const aboutMe = site.aboutMe;
+
   return (
     <>
       <PageHeader

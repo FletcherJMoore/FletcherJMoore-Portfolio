@@ -1,8 +1,5 @@
-import { skillGroups } from "@/lib/data";
-
-export default function Marquee() {
-  const items = skillGroups.flatMap((g) => g.skills);
-  const row = [...items, ...items];
+export default function Marquee({ skills }: { skills: string[] }) {
+  const row = [...skills, ...skills];
 
   return (
     <div className="relative overflow-hidden border-y border-[var(--color-border)] bg-[var(--color-ink-2)] py-5">

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { site } from "@/lib/data";
 
 const links = [
   { href: "/", label: "Home" },
@@ -13,7 +12,7 @@ const links = [
   { href: "/contact", label: "Contact" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ name }: { name: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -25,7 +24,7 @@ export default function Navbar() {
           className="font-display text-lg font-bold tracking-tight"
           onClick={() => setOpen(false)}
         >
-          <span className="text-gradient">{site.name.split(" ")[0]}</span>
+          <span className="text-gradient">{name.split(" ")[0]}</span>
           <span className="text-[var(--color-muted)]">.</span>
         </Link>
 
