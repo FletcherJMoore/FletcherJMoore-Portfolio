@@ -1,39 +1,20 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { jwtVerify } from "jose";
+import { auth } from "@/auth";
 
-const secret = () =>
-  new TextEncoder().encode(
-    process.env.AUTH_SECRET || "dev-insecure-secret-change-me"
-  );
-
-// Next.js 16 renamed "middleware" to "proxy" — same functionality.
-export async function proxy(req: NextRequest) {
+// Next.js 16 renamed "middleware" to "proxy". We wrap Auth.js's `auth` so the
+// session is available on the request, then gate the /admin area.
+export default auth((req) => {
   const { pathname } = req.nextUrl;
 
   // The login page must stay public, otherwise you can never sign in.
-  if (pathname === "/admin/login") return NextResponse.next();
+  if (pathname === "/admin/login") return;
 
-  const token = req.cookies.get("admin_session")?.value;
-  let ok = false;
-  if (token) {
-    try {
-      await jwtVerify(token, secret());
-      ok = true;
-    } catch {
-      ok = false;
-    }
-  }
-
-  if (!ok) {
+  const session = req.auth as { isAdmin?: boolean } | null;
+  if (!session?.isAdmin) {
     const url = req.nextUrl.clone();
     url.pathname = "/admin/login";
-    url.searchParams.set("from", pathname);
-    return NextResponse.redirect(url);
+    return Response.redirect(url);
   }
-
-  return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: ["/admin", "/admin/:path*"],

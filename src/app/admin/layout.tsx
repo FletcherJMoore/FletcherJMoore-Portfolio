@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { isAuthenticated } from "@/lib/auth";
+import { isAdmin } from "@/auth";
 import { logout } from "./actions";
 
 export const metadata: Metadata = { title: "Admin" };
@@ -24,7 +24,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const authed = await isAuthenticated();
+  const authed = await isAdmin();
 
   // Login page renders bare (no admin chrome).
   if (!authed) return <>{children}</>;

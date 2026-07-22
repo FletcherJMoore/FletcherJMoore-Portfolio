@@ -1,14 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import prisma from "@/lib/db";
-import { isAuthenticated, checkPassword, createSession, destroySession } from "@/lib/auth";
+import { isAdmin, signOut } from "@/auth";
 
 /* ---------------- helpers ---------------- */
 
 async function guard() {
-  if (!(await isAuthenticated())) {
+  if (!(await isAdmin())) {
     throw new Error("Unauthorized");
   }
 }
@@ -39,19 +38,8 @@ function refresh() {
 
 /* ---------------- auth ---------------- */
 
-export async function login(fd: FormData) {
-  const password = str(fd, "password");
-  const from = str(fd, "from") || "/admin";
-  if (!checkPassword(password)) {
-    redirect(`/admin/login?error=1&from=${encodeURIComponent(from)}`);
-  }
-  await createSession();
-  redirect(from.startsWith("/admin") ? from : "/admin");
-}
-
 export async function logout() {
-  await destroySession();
-  redirect("/admin/login");
+  await signOut({ redirectTo: "/admin/login" });
 }
 
 /* ---------------- settings ---------------- */
