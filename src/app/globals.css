@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THEME TOKENS  — bold & colorful, dark-first
+   ============================================================ */
+@theme {
+  --font-display: var(--font-space-grotesk);
+  --font-sans: var(--font-inter);
+
+  /* Core surfaces */
+  --color-ink: #0a0812;
+  --color-ink-2: #100c1c;
+  --color-surface: #171126;
+  --color-surface-2: #1e1733;
+  --color-border: #2c2244;
+
+  /* Text */
+  --color-paper: #f6f3ff;
+  --color-muted: #a79fc4;
+
+  /* Vibrant brand ramp */
+  --color-violet: #8b5cf6;
+  --color-violet-bright: #a855f7;
+  --color-magenta: #ec4899;
+  --color-pink: #f472b6;
+  --color-cyan: #22d3ee;
+  --color-lime: #a3e635;
+  --color-amber: #fbbf24;
+
+  --shadow-glow: 0 0 40px -8px rgba(168, 85, 247, 0.45);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Ambient background glow blobs, fixed behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(45rem 45rem at 12% -10%, rgba(139, 92, 246, 0.20), transparent 60%),
+    radial-gradient(40rem 40rem at 95% 5%, rgba(236, 72, 153, 0.16), transparent 60%),
+    radial-gradient(50rem 50rem at 50% 115%, rgba(34, 211, 238, 0.12), transparent 60%);
+  pointer-events: none;
+}
+
+::selection {
+  background: var(--color-magenta);
+  color: white;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-violet-bright), var(--color-pink) 45%, var(--color-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card {
+  background: linear-gradient(160deg, var(--color-surface), var(--color-ink-2));
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+}
+
+.card-hover {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, box-shadow 0.3s;
+}
+.card-hover:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in oklab, var(--color-violet) 55%, transparent);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Gradient border pill */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--color-border);
+  background: color-mix(in oklab, var(--color-surface) 80%, transparent);
+}
+
+/* Animated gradient underline for links */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--color-violet-bright), var(--color-pink));
+  transition: transform 0.3s ease;
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Marquee / infinite scroll */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+/* Slow float */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-marquee, .animate-float { animation: none; }
+}
